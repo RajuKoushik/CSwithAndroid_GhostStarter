@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Random;
 
 public class SimpleDictionary implements GhostDictionary {
     private ArrayList<String> words;
@@ -27,8 +29,30 @@ public class SimpleDictionary implements GhostDictionary {
 
     @Override
     public String getAnyWordStartingWith(String prefix) {
+        if (prefix == null || prefix.equals("")){
+            // if prefix is empty return any word
+
+            Random random = new Random();
+            return words.get(random.nextInt(words.size()));
+        }
+        // return a word that has prefix as prefix
+        int l = 0, r = words.size()-1, mid;
+        while (l <= r){
+            mid = (l+r) / 2;
+            if (words.get(mid).startsWith(prefix)){
+                return words.get(mid); // break and return word
+            }
+            if (words.get(mid).compareTo(prefix) > 0){
+                r = mid-1;
+            } else {
+                l = mid+1;
+            }
+        }
         return null;
     }
+
+
+
 
     @Override
     public String getGoodWordStartingWith(String prefix) {

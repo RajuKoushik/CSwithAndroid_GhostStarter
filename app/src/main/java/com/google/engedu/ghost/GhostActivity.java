@@ -3,6 +3,7 @@ package com.google.engedu.ghost;
 import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,16 +26,17 @@ public class GhostActivity extends AppCompatActivity {
     private SimpleDictionary simpleDictionary;
     private boolean userTurn = false;
     private Random random = new Random();
-    private TextView ghostText = (TextView)findViewById(R.id.ghostText);
-    private TextView gameStatus = (TextView)findViewById(R.id.gameStatus);
-    private Button bChallenge = (Button)findViewById(R.id.bChallenge);
-    private Button bRestart = (Button)findViewById(R.id.bRestart);
+     TextView ghosttext ;
+     TextView gamestatus ;
+    private Button bChallenge ;
+    private Button bRestart ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ghost);
-
+        ghosttext = (TextView)findViewById(R.id.ghostText);
+        gamestatus = (TextView)findViewById(R.id.gameStatus);
 
         AssetManager assetManager = getAssets();
         try {
@@ -59,13 +61,14 @@ public class GhostActivity extends AppCompatActivity {
     public boolean onKeyUp(int keyCode, KeyEvent event) {
 
         char unicodeChar = (char)event.getUnicodeChar();
-        String tempGhostText = ((String) ghostText.getText()).trim();
+        String tempGhostText = ((String) ghosttext.getText()).trim();
 
         if(unicodeChar>='a' && unicodeChar<='z' || unicodeChar>='A' && unicodeChar<='Z')
         {
             tempGhostText = tempGhostText + unicodeChar ;
-            ghostText.setText(tempGhostText);
-            gameStatus.setText(COMPUTER_TURN);
+            ghosttext.setText(tempGhostText);
+            gamestatus.setText(COMPUTER_TURN);
+            computerTurn();
             return super.onKeyUp(keyCode, event);
 
 
@@ -116,10 +119,52 @@ public class GhostActivity extends AppCompatActivity {
         TextView label = (TextView) findViewById(R.id.gameStatus);
         // Do computer turn stuff then make it the user's turn again
         userTurn = true;
+        String tempGhostText = ((String) ghosttext.getText()).trim();
+        int currentlength = tempGhostText.length();
+        if(tempGhostText.length()>=4)
+        {
+            label.setText("VICTORY");
+
+        }
+
+        if(simpleDictionary.getAnyWordStartingWith(tempGhostText) == null)
+        {
+
+            label.setText("VICTORY");
+        }
+        else
+        {
+            String tempo = simpleDictionary.getAnyWordStartingWith(tempGhostText);
+            Log.e("raju Koushik" , tempGhostText);
+            tempGhostText = tempGhostText  + tempo.charAt(currentlength);
+            Log.e("raju Koushik" , tempGhostText);
+            ghosttext.setText(tempGhostText);
+        }
+
+
         label.setText(USER_TURN);
     }
 
     public void ghostText(View view) {
         //on click event handler for the ghostText TextView
+    }
+
+    public void clickChallenge(View view) {
+        //on click event handler for the CHALLENGE button
+        String tempGhostText = ((String) ghosttext.getText()).trim();
+        if(tempGhostText.length()>=4 && simpleDictionary.isWord(tempGhostText))
+        {
+            gamestatus.setText("VICTORY FOR THE USER");
+        }
+        else if(simpleDictionary.getAnyWordStartingWith(tempGhostText) != null)
+        {
+            gamestatus.setText("VICTory FOR THE COMPUTER" + " " + simpleDictionary.getAnyWordStartingWith(tempGhostText));
+        }
+        if(simpleDictionary.getAnyWordStartingWith(tempGhostText) == null)
+        {
+            gamestatus.setText("VICTORY FOR THE USER");
+        }
+
+
     }
 }
