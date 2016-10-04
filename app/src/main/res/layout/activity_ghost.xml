@@ -11,7 +11,9 @@
         android:layout_height="wrap_content"
         android:textSize="48sp"
         android:id="@+id/ghostText"
+        android:onClick="ghostText"
         android:layout_alignParentRight="true"
+
         android:layout_alignParentEnd="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
@@ -19,6 +21,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Starting game"
         android:id="@+id/gameStatus"
@@ -31,6 +34,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/gameStatus"
+
         android:layout_alignParentStart="true"
         android:layout_marginTop="11dp"
         android:id="@+id/bChallenge" />
