@@ -10,6 +10,7 @@ import java.util.Random;
 
 public class SimpleDictionary implements GhostDictionary {
     private ArrayList<String> words;
+    private Random rand = new Random();
 
     public SimpleDictionary(InputStream wordListStream) throws IOException {
         BufferedReader in = new BufferedReader(new InputStreamReader(wordListStream));
@@ -31,9 +32,7 @@ public class SimpleDictionary implements GhostDictionary {
     public String getAnyWordStartingWith(String prefix) {
         if (prefix == null || prefix.equals("")){
             // if prefix is empty return any word
-
-            Random random = new Random();
-            return words.get(random.nextInt(words.size()));
+            return words.get(2);
         }
         // return a word that has prefix as prefix
         int l = 0, r = words.size()-1, mid;
@@ -50,7 +49,6 @@ public class SimpleDictionary implements GhostDictionary {
         }
         return null;
     }
-
 
 
 

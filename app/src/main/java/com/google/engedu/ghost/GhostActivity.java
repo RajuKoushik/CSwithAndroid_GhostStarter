@@ -21,9 +21,10 @@ import static android.R.attr.keycode;
 
 public class GhostActivity extends AppCompatActivity {
     private static final String COMPUTER_TURN = "Computer's turn";
+    private static final String COMPUTER_WINS = "Computer WINS";
     private static final String USER_TURN = "Your turn";
     private GhostDictionary dictionary;
-    private SimpleDictionary simpleDictionary;
+    // private SimpleDictionary simpleDictionary;
     private boolean userTurn = false;
     private Random random = new Random();
      TextView ghosttext ;
@@ -41,8 +42,8 @@ public class GhostActivity extends AppCompatActivity {
         AssetManager assetManager = getAssets();
         try {
             InputStream inputStream = assetManager.open("words.txt");
-            dictionary = new FastDictionary(inputStream);
-            simpleDictionary = new SimpleDictionary((inputStream));
+            dictionary = new SimpleDictionary(inputStream);
+            // simpleDictionary = new SimpleDictionary(inputStream);
         } catch (IOException e) {
             Toast toast = Toast.makeText(this, "Could not load dictionary", Toast.LENGTH_LONG);
             toast.show();
@@ -116,33 +117,37 @@ public class GhostActivity extends AppCompatActivity {
     }
 
     private void computerTurn() {
-        TextView label = (TextView) findViewById(R.id.gameStatus);
+        //TextView label = (TextView) findViewById(R.id.gameStatus);
         // Do computer turn stuff then make it the user's turn again
-        userTurn = true;
-        String tempGhostText = ((String) ghosttext.getText()).trim();
+
+        String tempGhostText = (String) ghosttext.getText();
         int currentlength = tempGhostText.length();
-        if(tempGhostText.length()>=4)
+        Toast.makeText(getApplicationContext(), dictionary.getAnyWordStartingWith(tempGhostText), Toast.LENGTH_SHORT).show();
+        if(dictionary.isWord(tempGhostText))
         {
-            label.setText("VICTORY");
-
+            gamestatus.setText(COMPUTER_WINS);
         }
 
-        if(simpleDictionary.getAnyWordStartingWith(tempGhostText) == null)
-        {
 
-            label.setText("VICTORY");
-        }
-        else
+        else if(dictionary.getAnyWordStartingWith(tempGhostText) == null)
         {
-            String tempo = simpleDictionary.getAnyWordStartingWith(tempGhostText);
+            gamestatus.setText(COMPUTER_WINS);
+            //gamestatus.setText("THE COMPUTER WINS");
+            Toast.makeText(getApplicationContext(), "THE COMPUTER WINS", Toast.LENGTH_SHORT).show();
+
+        }
+        else if(dictionary.getAnyWordStartingWith(tempGhostText) != null)
+        {
+            String tempo = dictionary.getAnyWordStartingWith(tempGhostText);
             Log.e("raju Koushik" , tempGhostText);
             tempGhostText = tempGhostText  + tempo.charAt(currentlength);
             Log.e("raju Koushik" , tempGhostText);
             ghosttext.setText(tempGhostText);
+            gamestatus.setText(USER_TURN);
         }
 
 
-        label.setText(USER_TURN);
+        //gamestatus.setText(USER_TURN);
     }
 
     public void ghostText(View view) {
@@ -152,15 +157,15 @@ public class GhostActivity extends AppCompatActivity {
     public void clickChallenge(View view) {
         //on click event handler for the CHALLENGE button
         String tempGhostText = ((String) ghosttext.getText()).trim();
-        if(tempGhostText.length()>=4 && simpleDictionary.isWord(tempGhostText))
+        if(tempGhostText.length()>=4 && dictionary.isWord(tempGhostText))
         {
             gamestatus.setText("VICTORY FOR THE USER");
         }
-        else if(simpleDictionary.getAnyWordStartingWith(tempGhostText) != null)
+        else if(dictionary.getAnyWordStartingWith(tempGhostText) != null)
         {
-            gamestatus.setText("VICTory FOR THE COMPUTER" + " " + simpleDictionary.getAnyWordStartingWith(tempGhostText));
+            gamestatus.setText("VICTory FOR THE COMPUTER" + " " + dictionary.getAnyWordStartingWith(tempGhostText));
         }
-        if(simpleDictionary.getAnyWordStartingWith(tempGhostText) == null)
+        if(dictionary.getAnyWordStartingWith(tempGhostText) == null)
         {
             gamestatus.setText("VICTORY FOR THE USER");
         }
